@@ -624,23 +624,64 @@
         }
 
         /* --- WHATSAPP FLOATING --- */
-        .whatsapp-float {
+        /* Container para o botão e o texto */
+        .whatsapp-container {
             position: fixed;
-            width: 60px;
-            height: 60px;
             bottom: 40px;
             right: 40px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Texto "Agende sua avaliação" */
+        .whatsapp-text {
+            background-color: white;
+            color: var(--rose-gold);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            white-space: nowrap;
+            position: relative;
+            opacity: 0;
+            animation: fadeInText 0.5s ease-out 1s forwards; /* Aparece após 1s */
+        }
+
+        /* Triângulo do balão de fala */
+        .whatsapp-text::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px 6px 0;
+            border-style: solid;
+            border-color: white transparent transparent transparent;
+        }
+
+        @keyframes fadeInText {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .whatsapp-float {
+            width: 60px;
+            height: 60px;
             background-color: #25d366;
             color: #FFF;
             border-radius: 50px;
             text-align: center;
             font-size: 30px;
             box-shadow: 2px 2px 3px #999;
-            z-index: 1000;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: 0.3s;
+            text-decoration: none;
         }
 
         .whatsapp-float:hover {
@@ -725,11 +766,17 @@
 
             /* Imagens */
             .profile-img {
-                height: 350px;
+                height: 250px; /* Ajustado para mobile (era 350px) */
+                object-position: top; /* Garante que o rosto apareça */
             }
             
             .news-image img {
-                height: auto;
+                height: 250px; /* Limita altura da imagem de novidade */
+                object-fit: cover;
+            }
+            
+            .team-photo-side {
+                min-height: 250px; /* Reduz altura do bloco da equipe */
             }
 
             /* Fontes Gerais */
@@ -747,12 +794,20 @@
                 margin: 0 15px;
             }
             
-            /* Ajuste de Margem do Botão */
+            /* Ajuste de Margem do Botão e Container no Mobile */
+            .whatsapp-container {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .whatsapp-text {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+
             .whatsapp-float {
                 width: 50px;
                 height: 50px;
-                bottom: 20px;
-                right: 20px;
                 font-size: 25px;
             }
         }
@@ -1001,10 +1056,13 @@
         </div>
     </footer>
 
-    <!-- Botão WhatsApp Flutuante -->
-    <a href="https://api.whatsapp.com/message/QH3AV2SSWFR6N1?autoload=1&app_absent=0&utm_source=ig" class="whatsapp-float" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+    <!-- Botão WhatsApp Flutuante com Container e Texto -->
+    <div class="whatsapp-container">
+        <span class="whatsapp-text">Agende sua avaliação</span>
+        <a href="https://api.whatsapp.com/message/QH3AV2SSWFR6N1?autoload=1&app_absent=0&utm_source=ig" class="whatsapp-float" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
 
     <!-- Scripts -->
     <script>
