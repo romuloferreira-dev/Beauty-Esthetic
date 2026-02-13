@@ -766,12 +766,15 @@
 
             /* Imagens */
             .profile-img {
-                height: 250px; /* Ajustado para mobile (era 350px) */
-                object-position: top; /* Garante que o rosto apareça */
+                height: auto; /* IMPORTANTE: Altura automática para não esticar */
+                max-height: 500px;
+                object-fit: cover;
+                object-position: top;
             }
             
             .news-image img {
-                height: 250px; /* Limita altura da imagem de novidade */
+                height: auto; /* Ajuste automático também para a imagem de novidade */
+                max-height: 400px;
                 object-fit: cover;
             }
             
@@ -801,8 +804,12 @@
             }
             
             .whatsapp-text {
-                font-size: 0.8rem;
-                padding: 6px 12px;
+                font-size: 0.75rem;
+                padding: 8px 10px;
+                white-space: normal; /* Permite quebrar linha */
+                width: 90px; /* Força a quebra de linha (largura pequena) */
+                text-align: center;
+                line-height: 1.2;
             }
 
             .whatsapp-float {
