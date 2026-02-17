@@ -29,6 +29,8 @@
             
             --gradient-rose: linear-gradient(135deg, var(--rose-gold) 0%, var(--rose-medium) 100%);
             --shadow: 0 10px 30px rgba(183, 110, 121, 0.2);
+            --header-height: 70px;
+            --marquee-height: 40px;
         }
 
         * {
@@ -47,6 +49,7 @@
             background-color: var(--off-white);
             overflow-x: hidden; /* Evita rolagem horizontal indesejada */
             line-height: 1.6;
+            padding-top: calc(var(--header-height) + var(--marquee-height)); /* Compensar header fixo + marquee fixo */
         }
 
         h1, h2, h3, h4 {
@@ -65,7 +68,6 @@
 
         /* --- UTILITÁRIOS DE EFEITOS --- */
         
-        /* Efeito Shimmer (Brilho Metálico) */
         .shimmer-text {
             background: linear-gradient(
                 to right,
@@ -88,7 +90,6 @@
             }
         }
 
-        /* Animação de Aparecimento (Fade In Up) */
         .reveal {
             opacity: 0;
             transform: translateY(30px);
@@ -145,17 +146,19 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+            height: var(--header-height);
+            background: rgba(255, 255, 255, 0.98);
             z-index: 1000;
             box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-            padding: 10px 0;
+            display: flex;
+            align-items: center;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+            width: 100%;
         }
 
         nav {
@@ -167,16 +170,17 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 15px;
-            text-decoration: none;
+            gap: 15px; /* Espaço entre imagem e texto */
+            height: 50px;
         }
 
         .logo img {
-            height: 50px;
+            height: 100%;
             width: auto;
             object-fit: contain;
         }
 
+        /* Container do texto do Header restaurado */
         .logo-text-container {
             display: flex;
             flex-direction: column;
@@ -202,6 +206,11 @@
         .nav-links {
             display: flex;
             gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links > li {
+            position: relative;
         }
 
         .nav-links a {
@@ -209,21 +218,62 @@
             font-weight: 500;
             font-size: 0.95rem;
             position: relative;
+            padding: 10px 0;
         }
 
-        .nav-links a::after {
+        /* Efeito hover nos links principais */
+        .nav-links > li > a::after {
             content: '';
             position: absolute;
             width: 0;
             height: 2px;
-            bottom: -5px;
+            bottom: 0;
             left: 0;
             background-color: var(--rose-gold);
             transition: width 0.3s;
         }
 
-        .nav-links a:hover::after {
+        .nav-links > li > a:hover::after {
             width: 100%;
+        }
+
+        /* --- DROPDOWN MENU --- */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 10px 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            border-top: 3px solid var(--rose-gold);
+        }
+
+        .nav-links li:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            top: 120%; /* Pequeno gap */
+        }
+
+        .dropdown-menu li a {
+            display: block;
+            padding: 10px 20px;
+            color: var(--text-dark);
+            white-space: nowrap;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: var(--off-white);
+            color: var(--rose-gold);
+        }
+        
+        .dropdown-menu li a::after {
+            display: none; /* Remove underline do dropdown */
         }
 
         .menu-toggle {
@@ -233,10 +283,54 @@
             cursor: pointer;
         }
 
+        /* --- MARQUEE FIXO (TOPO) --- */
+        .fixed-marquee {
+            position: fixed;
+            top: var(--header-height); /* Logo abaixo do header */
+            left: 0;
+            width: 100%;
+            height: var(--marquee-height);
+            background: var(--rose-gold);
+            color: white;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .fixed-marquee-content {
+            display: inline-block;
+            animation: scroll 40s linear infinite;
+        }
+
+        .fixed-marquee-item {
+            display: inline-block;
+            font-size: 0.9rem;
+            margin: 0 20px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .fixed-marquee-separator {
+            font-size: 0.6rem;
+            opacity: 0.7;
+            vertical-align: middle;
+            margin: 0 5px;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
         /* --- HERO SECTION (CAPA) --- */
         .hero {
-            height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.1)), url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            height: calc(100vh - var(--header-height) - var(--marquee-height)); /* Ajusta altura para tela cheia */
+            min-height: 500px;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.2)), url('https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -245,7 +339,6 @@
             justify-content: center;
             text-align: center;
             position: relative;
-            margin-bottom: 50px;
         }
 
         .hero-content {
@@ -257,24 +350,30 @@
 
         .hero h1 {
             font-size: 4rem;
-            margin-bottom: 10px;
+            margin-bottom: 0px; /* Reduzido para aproximar do subtítulo */
             color: white;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.1;
         }
 
-        .hero-subtitle {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
+        .hero-subtitle-main {
+            font-family: 'Lato', sans-serif;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--rose-light);
+            margin-top: 5px; /* Ajuste fino */
+            margin-bottom: 20px;
             font-weight: 300;
-            color: #f0f0f0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
-        /* Efeito Typewriter - Loop Infinito a cada 3s */
+        /* Efeito Typewriter */
         .typewriter-container {
             display: inline-block;
             margin-bottom: 40px;
             max-width: 100%;
-            height: 35px; /* Altura fixa para evitar pulo */
+            height: 35px;
         }
 
         .typewriter {
@@ -286,62 +385,24 @@
             font-size: 1.5rem;
             font-family: 'Playfair Display', serif;
             width: 0;
-            /* Animação infinita: digita, espera, apaga/reinicia */
-            animation: 
-                typing 3s steps(30, end) infinite;
+            animation: typing 3s steps(30, end) infinite;
         }
 
         @keyframes typing {
             0% { width: 0 }
             50% { width: 100% }
             90% { width: 100% }
-            100% { width: 0 } /* Reinicia */
+            100% { width: 0 }
         }
 
-        /* --- MARQUEE (Carrossel Infinito) --- */
-        .marquee-container {
-            width: 100%;
-            overflow: hidden;
-            white-space: nowrap;
-            margin-top: 50px;
-            position: relative;
-            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-        }
-
-        .marquee-content {
-            display: inline-block;
-            animation: scroll 60s linear infinite; /* Mais lento devido a mais itens */
-        }
-
-        .marquee-item {
-            display: inline-block;
-            color: rgba(255, 255, 255, 0.9);
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-            margin: 0 30px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            font-weight: 400;
-        }
-        
-        .marquee-separator {
-            color: var(--rose-gold);
-            font-size: 0.8rem;
-            vertical-align: middle;
-        }
-
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-        }
-
-        /* --- NOVIDADE (LETYBO) --- */
-        .news-section {
+        /* --- SEÇÕES GERAIS --- */
+        .news-section, .professional-wrapper, .locations-section {
             padding: 80px 0;
-            background: white;
         }
 
+        .news-section { background: white; }
+        
+        /* Card Novidade */
         .news-container {
             display: flex;
             flex-wrap: wrap;
@@ -357,20 +418,14 @@
         .news-image {
             flex: 1;
             min-width: 300px;
-            position: relative;
         }
-
         .news-image img {
             width: 100%;
             border-radius: 15px;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             object-fit: cover;
         }
-
-        .news-content {
-            flex: 1;
-            min-width: 300px;
-        }
+        .news-content { flex: 1; min-width: 300px; }
 
         .badge {
             background: var(--rose-gold);
@@ -384,31 +439,18 @@
             display: inline-block;
         }
 
-        .features-list {
-            margin: 20px 0;
-        }
-
+        .features-list { margin: 20px 0; }
         .features-list li {
             margin-bottom: 10px;
             display: flex;
             align-items: center;
             color: var(--text-dark);
         }
+        .features-list li i { color: var(--rose-gold); margin-right: 10px; }
 
-        .features-list li i {
-            color: var(--rose-gold);
-            margin-right: 10px;
-        }
-
-        /* --- ESTRUTURA PROFISSIONAIS (Genérico) --- */
-        .professional-wrapper {
-            padding: 60px 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .professional-wrapper:last-of-type {
-            border-bottom: none;
-        }
+        /* --- CARDS PROFISSIONAIS --- */
+        .professional-wrapper { border-bottom: 1px solid #eee; }
+        .professional-wrapper:last-of-type { border-bottom: none; }
 
         .profile-card {
             display: flex;
@@ -423,7 +465,6 @@
             min-width: 300px;
             position: relative;
         }
-
         .profile-img-container::before {
             content: '';
             position: absolute;
@@ -434,27 +475,24 @@
             border: 2px solid var(--rose-gold);
             z-index: 0;
         }
-
+        
+        /* AQUI VOCÊ ALTERA O ENQUADRAMENTO DA FOTO:
+           object-position: top; -> foca no topo (cabeça)
+           object-position: center; -> foca no centro
+        */
         .profile-img {
             width: 100%;
-            height: 500px; /* Foto grande retangular */
+            height: 500px;
             object-fit: cover;
+            object-position: top; /* Ajuste adicionado para não cortar a cabeça */
             border-radius: 5px;
             position: relative;
             z-index: 1;
             box-shadow: var(--shadow);
         }
-
-        .profile-info {
-            flex: 1.2;
-            min-width: 300px;
-        }
-
-        .profile-info h2 {
-            font-size: 2.8rem;
-            margin-bottom: 5px;
-        }
-
+        
+        .profile-info { flex: 1.2; min-width: 300px; }
+        .profile-info h2 { font-size: 2.8rem; margin-bottom: 5px; }
         .profile-info h3 {
             font-family: 'Lato', sans-serif;
             font-weight: 300;
@@ -464,31 +502,17 @@
             letter-spacing: 2px;
             font-size: 1rem;
         }
-
-        .bio-text {
-            color: var(--text-light);
-            margin-bottom: 30px;
-            text-align: justify;
-        }
-        
-        .social-buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
+        .bio-text { color: var(--text-light); margin-bottom: 30px; text-align: justify; }
+        .social-buttons { display: flex; gap: 15px; flex-wrap: wrap; }
 
         /* --- PROCEDIMENTOS GRID --- */
-        .procedures-subsection {
-            margin-top: 40px;
-        }
-        
+        .procedures-subsection { margin-top: 40px; }
         .section-subtitle {
             text-align: center;
             font-size: 2rem;
             margin-bottom: 40px;
             position: relative;
         }
-        
         .section-subtitle::after {
             content: '';
             display: block;
@@ -497,13 +521,14 @@
             background: var(--rose-gold);
             margin: 15px auto 0;
         }
-
+        
+        /* GRID PADRÃO (Desktop/Tablet) */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
         }
-
+        
         .service-card {
             background: white;
             padding: 30px 20px;
@@ -517,34 +542,27 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 180px;
+            min-height: 160px;
         }
-
         .service-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow);
             border-color: var(--rose-light);
         }
-
         .service-icon {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: var(--rose-gold);
             margin-bottom: 15px;
         }
-
         .service-card h4 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--vinho-claro);
             font-weight: 700;
+            text-transform: uppercase;
         }
 
         /* --- LOCAIS --- */
-        .locations-section {
-            padding: 80px 0;
-            text-align: center;
-            background: #fff5f5;
-        }
-
+        .locations-section { background: #fff5f5; text-align: center; }
         .locations-grid {
             display: flex;
             justify-content: center;
@@ -552,29 +570,24 @@
             gap: 20px;
             margin-top: 40px;
         }
-
         .location-box {
             background: white;
             padding: 30px;
             border-radius: 10px;
             width: 300px;
             transition: 0.3s;
-            border: 1px solid transparent;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-
         .location-box:hover {
-            border-color: var(--rose-gold);
             transform: translateY(-5px);
+            border: 1px solid var(--rose-gold);
         }
-
         .location-btn {
             display: inline-block;
             margin-top: 15px;
             color: var(--rose-gold);
             font-weight: 700;
             border-bottom: 1px solid var(--rose-gold);
-            padding-bottom: 2px;
         }
 
         /* --- FOOTER --- */
@@ -583,7 +596,6 @@
             color: #ccc;
             padding: 60px 0 20px;
         }
-
         .footer-content {
             display: flex;
             flex-wrap: wrap;
@@ -591,30 +603,10 @@
             gap: 40px;
             margin-bottom: 40px;
         }
-
-        .footer-col h4 {
-            color: var(--rose-gold);
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-        }
-
-        .social-icons a {
-            color: white;
-            font-size: 1.5rem;
-            margin-right: 15px;
-            transition: 0.3s;
-        }
-
-        .social-icons a:hover {
-            color: var(--rose-gold);
-        }
-
-        .copyright {
-            text-align: center;
-            border-top: 1px solid #444;
-            padding-top: 20px;
-            font-size: 0.8rem;
-        }
+        .footer-col h4 { color: var(--rose-gold); margin-bottom: 20px; font-size: 1.2rem; }
+        .social-icons a { color: white; font-size: 1.5rem; margin-right: 15px; transition: 0.3s; }
+        .social-icons a:hover { color: var(--rose-gold); }
+        .copyright { text-align: center; border-top: 1px solid #444; padding-top: 20px; font-size: 0.8rem; }
 
         /* --- WHATSAPP FLOATING --- */
         .whatsapp-container {
@@ -627,7 +619,6 @@
             align-items: center;
             gap: 10px;
         }
-
         .whatsapp-text {
             background-color: white;
             color: var(--rose-gold);
@@ -641,7 +632,6 @@
             opacity: 0;
             animation: fadeInText 0.5s ease-out 1s forwards;
         }
-
         .whatsapp-text::after {
             content: '';
             position: absolute;
@@ -652,12 +642,10 @@
             border-style: solid;
             border-color: white transparent transparent transparent;
         }
-
         @keyframes fadeInText {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .whatsapp-float {
             width: 60px;
             height: 60px;
@@ -673,37 +661,32 @@
             transition: 0.3s;
             text-decoration: none;
         }
-
-        .whatsapp-float:hover {
-            transform: scale(1.1);
-            background-color: #128c7e;
-        }
+        .whatsapp-float:hover { transform: scale(1.1); background-color: #128c7e; }
 
         /* --- RESPONSIVIDADE (MOBILE) --- */
         @media (max-width: 900px) {
-            .hero h1 {
-                font-size: 3rem;
-            }
-            .profile-card, .news-container {
-                flex-direction: column;
-            }
-            .profile-info, .profile-img-container, .news-content, .news-image {
-                min-width: 100%;
-            }
+            .hero h1 { font-size: 3rem; }
+            .profile-card, .news-container { flex-direction: column; }
+            .profile-info, .profile-img-container, .news-content, .news-image { min-width: 100%; }
         }
 
         @media (max-width: 768px) {
+            :root {
+                --header-height: 60px;
+                --marquee-height: 35px;
+            }
+            
             .nav-links {
                 position: absolute;
                 right: 0px;
                 height: 100vh;
-                top: 70px;
-                background-color: rgba(255, 255, 255, 0.98);
+                top: var(--header-height);
+                background-color: white;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: flex-start;
-                gap: 40px;
+                gap: 20px;
                 width: 100%;
                 transform: translateX(100%);
                 transition: transform 0.4s ease-in-out;
@@ -711,25 +694,40 @@
                 border-top: 1px solid var(--rose-light);
             }
 
-            .nav-links.active {
-                transform: translateX(0%);
-                box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            .nav-links.active { transform: translateX(0%); box-shadow: -5px 0 15px rgba(0,0,0,0.1); }
+            
+            /* Dropdown no mobile */
+            .dropdown-menu {
+                position: static;
+                transform: none;
+                box-shadow: none;
+                border: none;
+                background: #f9f9f9;
+                text-align: center;
+                display: none;
+                width: 100%;
+                border-radius: 0;
+            }
+            
+            .nav-links li:hover .dropdown-menu {
+                display: block;
+                opacity: 1;
+                visibility: visible;
             }
 
-            .menu-toggle {
-                display: block;
-            }
+            .menu-toggle { display: block; }
 
             .hero {
                 background-attachment: scroll;
                 background-position: center;
                 background-size: cover;
+                height: auto;
+                min-height: 400px;
+                padding: 50px 0;
             }
 
-            .hero h1 {
-                font-size: 2.2rem;
-                line-height: 1.2;
-            }
+            .hero h1 { font-size: 2.2rem; line-height: 1.2; }
+            .hero-subtitle-main { font-size: 1rem; }
             
             .typewriter {
                 font-size: 1rem;
@@ -739,27 +737,12 @@
                 text-align: center;
                 width: 100%;
             }
-            
-            .typewriter-container {
-                border-bottom: 2px solid var(--rose-gold);
-                padding-bottom: 5px;
-                height: auto;
-            }
+            .typewriter-container { border-bottom: 2px solid var(--rose-gold); padding-bottom: 5px; height: auto; }
 
-            .profile-img {
-                height: 350px;
-                object-position: top;
-            }
-            
-            .news-image img {
-                height: 250px;
-            }
+            .profile-img { height: 350px; object-position: top; }
+            .news-image img { height: 250px; }
 
-            .whatsapp-container {
-                bottom: 20px;
-                right: 20px;
-            }
-            
+            .whatsapp-container { bottom: 20px; right: 20px; }
             .whatsapp-text {
                 font-size: 0.75rem;
                 padding: 8px 10px;
@@ -768,24 +751,40 @@
                 text-align: center;
                 line-height: 1.2;
             }
+            .whatsapp-float { width: 50px; height: 50px; font-size: 25px; }
 
-            .whatsapp-float {
-                width: 50px;
-                height: 50px;
-                font-size: 25px;
+            /* --- ALTERAÇÃO SOLICITADA: PROCEDIMENTOS LADO A LADO NO MOBILE --- */
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr); /* Força 2 colunas */
+                gap: 10px; /* Reduz espaço entre eles */
+            }
+            
+            .service-card {
+                padding: 15px 10px; /* Reduz padding interno */
+                min-height: 130px; /* Reduz altura mínima */
+            }
+            
+            .service-icon {
+                font-size: 1.5rem; /* Ícone menor */
+                margin-bottom: 10px;
+            }
+            
+            .service-card h4 {
+                font-size: 0.8rem; /* Fonte menor */
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
+    <!-- Header Fixo -->
     <header>
         <div class="container">
             <nav>
                 <a href="#" class="logo">
-                    <!-- FOTO DA LOGO AQUI -->
+                    <!-- FOTO DA LOGO (SOMENTE IMAGEM) -->
                     <img src="assets/logo.PNG" alt="Logo Beauty Esthetic">
+                    <!-- TEXTO RESTAURADO -->
                     <div class="logo-text-container">
                         <span class="logo-text shimmer-text">Beauty Esthetic</span>
                         <span class="logo-subtitle">Saúde & Bem Estar</span>
@@ -794,9 +793,17 @@
                 <ul class="nav-links">
                     <li><a href="#home">Início</a></li>
                     <li><a href="#novidades">Novidades</a></li>
-                    <li><a href="#gleice">Dra. Gleice</a></li>
-                    <li><a href="#lilian">Lílian</a></li>
-                    <li><a href="#kellen">Dra. Kellen</a></li>
+                    
+                    <!-- MENU NOSSO TIME (DROPDOWN) -->
+                    <li>
+                        <a href="#equipe">Nosso Time <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#gleice">Dra. Gleice Kelly</a></li>
+                            <li><a href="#lilian">Lílian Postigo</a></li>
+                            <li><a href="#kellen">Dra. Kellen Nisnare</a></li>
+                        </ul>
+                    </li>
+                    
                     <li><a href="#locais">Locais</a></li>
                 </ul>
                 <div class="menu-toggle">
@@ -806,11 +813,40 @@
         </div>
     </header>
 
+    <!-- MARQUEE FIXO NO TOPO (Abaixo do Header) -->
+    <div class="fixed-marquee">
+        <div class="fixed-marquee-content">
+            <!-- Loop de Procedimentos -->
+            <span class="fixed-marquee-item">Harmonização Facial</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Botox</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Preenchimento Labial</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Otomodelação</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Rinomodelação</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Depilação a Laser</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Bioestimuladores</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">EzBody Avançado</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Design de Sobrancelhas</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            
+            <!-- Repetição para Loop Suave -->
+            <span class="fixed-marquee-item">Harmonização Facial</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Botox</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Preenchimento Labial</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Otomodelação</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Rinomodelação</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Depilação a Laser</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Bioestimuladores</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">EzBody Avançado</span> <i class="fas fa-star fixed-marquee-separator"></i>
+            <span class="fixed-marquee-item">Design de Sobrancelhas</span> <i class="fas fa-star fixed-marquee-separator"></i>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
             <h1 class="shimmer-text">Beauty Esthetic</h1>
-            <!-- Procedimentos removidos do subtítulo conforme solicitado -->
+            
+            <!-- SUBTÍTULO APROXIMADO -->
+            <h2 class="hero-subtitle-main">Saúde & Bem Estar</h2>
             
             <div class="typewriter-container">
                 <div class="typewriter">Sua beleza em primeiro lugar</div>
@@ -820,38 +856,6 @@
             <a href="https://wa.me/5569993462725?text=Ol%C3%A1%2C%20gostaria%20saber%20mais%20sobre..." target="_blank" class="btn-gold">
                 Agendar Avaliação
             </a>
-
-            <!-- SCROLLING MARQUEE -->
-            <div class="marquee-container">
-                <div class="marquee-content">
-                    <!-- Primeiro conjunto -->
-                    <span class="marquee-item">Harmonização Facial</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Otomodelação</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Rinomodelação</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Liposlim 4D</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">EzBody Avançado</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Tatuagem profissional</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Cauterização de Verrugas</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Design de sobrancelhas</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Brow Lamination</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Lash Lifting</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Remoção a laser</span> <i class="fas fa-star marquee-separator"></i>
-                    
-                    <!-- Duplicata para Loop -->
-                    <span class="marquee-item">Harmonização Facial</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Otomodelação</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Rinomodelação</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Liposlim 4D</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">EzBody Avançado</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Tatuagem profissional</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Cauterização de Verrugas</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Design de sobrancelhas</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Brow Lamination</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Lash Lifting</span> <i class="fas fa-star marquee-separator"></i>
-                    <span class="marquee-item">Remoção a laser</span> <i class="fas fa-star marquee-separator"></i>
-                </div>
-            </div>
-
         </div>
     </section>
 
@@ -860,7 +864,6 @@
         <div class="container">
             <div class="news-container">
                 <div class="news-image">
-                    <!-- FOTO TOXINA BOTULINICA AQUI -->
                     <img src="https://drapaulaazevedodermato.com.br/novo-2023/wp-content/uploads/2025/12/Saiba-como-a-toxina-botulinica-Letybo-atua-e-conheca-a-abordagem-cientifica-da-Dra.-Paula-Azevedo-em-Goiania.jpg" alt="Toxina Botulínica Letybo">
                 </div>
                 <div class="news-content">
@@ -877,7 +880,6 @@
 
                     <p><strong>Se você deseja suavizar linhas de expressão, prevenir rugas e manter a pele jovem e descansada, essa novidade é para você!</strong></p>
                     <br>
-                    <!-- BOTÃO EU QUERO -->
                     <a href="https://wa.me/5569993462725?text=Ol%C3%A1%2C%20eu%20quero%20saber%20mais%20sobre%20a%20Letybo!" target="_blank" class="btn-gold">
                         <i class="fab fa-whatsapp"></i> Eu quero!
                     </a>
@@ -894,7 +896,6 @@
             <!-- Perfil -->
             <div class="profile-card">
                 <div class="profile-img-container">
-                    <!-- FOTO DA PROFISSIONAL GLEICE AQUI -->
                     <img src="assets/gleice.png" alt="Dra Gleice Kelly" class="profile-img">
                 </div>
                 <div class="profile-info">
@@ -919,11 +920,19 @@
 
             <!-- Procedimentos da Dra Gleice -->
             <div class="procedures-subsection">
-                <h3 class="section-subtitle">Nossos Procedimentos</h3>
+                <h3 class="section-subtitle">Portfólio de Procedimentos</h3>
                 <div class="services-grid">
                     <div class="service-card">
                         <div class="service-icon"><i class="fas fa-magic"></i></div>
                         <h4>Harmonização Facial</h4>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-syringe"></i></div>
+                        <h4>Botox</h4>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-kiss-wink-heart"></i></div>
+                        <h4>Preenchimento Labial</h4>
                     </div>
                     <div class="service-card">
                         <div class="service-icon"><i class="fas fa-infinity"></i></div>
@@ -931,11 +940,35 @@
                     </div>
                     <div class="service-card">
                         <div class="service-icon"><i class="fas fa-feather-alt"></i></div>
-                        <h4>Rinomodelação</h4>
+                        <h4>Rinomodelação com fios</h4>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-user-circle"></i></div>
+                        <h4>Contorno Mandibular Slim 4D</h4>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-bolt"></i></div>
+                        <h4>Depilação a Laser</h4>
                     </div>
                     <div class="service-card">
                         <div class="service-icon"><i class="fas fa-spa"></i></div>
-                        <h4>Liposlim 4D</h4>
+                        <h4>Estética Facial</h4>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-flask"></i></div>
+                        <h4>Bioestimulador de Colágeno</h4>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-project-diagram"></i></div>
+                        <h4>Fios de PDO</h4>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-heartbeat"></i></div>
+                        <h4>PEIM (micro varizes)</h4>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon"><i class="fas fa-th"></i></div>
+                        <h4>Microagulhamento</h4>
                     </div>
                 </div>
             </div>
@@ -950,9 +983,7 @@
             <!-- Perfil -->
             <div class="profile-card">
                 <div class="profile-img-container">
-                    <!-- FOTO DA PROFISSIONAL LÍLIAN AQUI -->
-                    <!-- Placeholder para a foto -->
-                    <img src="https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Lílian Postigo" class="profile-img">
+                    <img src="assets/lilian.png" alt="Lílian Postigo" class="profile-img">
                 </div>
                 <div class="profile-info">
                     <h2 class="shimmer-text">Lílian Postigo</h2>
@@ -974,7 +1005,7 @@
 
             <!-- Procedimentos da Lílian -->
             <div class="procedures-subsection">
-                <h3 class="section-subtitle">Procedimentos</h3>
+                <h3 class="section-subtitle">Portfólio de Procedimentos</h3>
                 <div class="services-grid">
                     <div class="service-card">
                         <div class="service-icon"><i class="fas fa-eye"></i></div>
@@ -1034,9 +1065,7 @@
             <!-- Perfil -->
             <div class="profile-card">
                 <div class="profile-img-container">
-                    <!-- FOTO DA PROFISSIONAL KELLEN AQUI -->
-                    <!-- Placeholder para a foto -->
-                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Dra Kellen Nisnare" class="profile-img">
+                    <img src="assets/ketlen.png" alt="Dra Kellen Nisnare" class="profile-img">
                 </div>
                 <div class="profile-info">
                     <h2 class="shimmer-text">Dra. Kellen Nisnare</h2>
@@ -1058,7 +1087,7 @@
 
             <!-- Procedimentos da Dra Kellen -->
             <div class="procedures-subsection">
-                <h3 class="section-subtitle">Procedimentos</h3>
+                <h3 class="section-subtitle">Portfólio de Procedimentos</h3>
                 <div class="services-grid">
                     <div class="service-card">
                         <div class="service-icon"><i class="fas fa-heartbeat"></i></div>
@@ -1184,8 +1213,8 @@
             navLinks.classList.toggle('active');
         });
 
-        // Fechar menu ao clicar em um link
-        document.querySelectorAll('.nav-links li a').forEach(link => {
+        // Fechar menu ao clicar em um link (exceto se for dropdown)
+        document.querySelectorAll('.nav-links li a:not([href="#equipe"])').forEach(link => {
             link.addEventListener('click', () => {
                 navLinks.classList.remove('active');
             });
